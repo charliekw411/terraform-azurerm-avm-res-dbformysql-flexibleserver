@@ -3,6 +3,7 @@ data "azurerm_resource_group" "parent" {
   name  = var.resource_group_name
 }
 
+
 resource "azurerm_mysql_flexible_server" "this" {
   location                          = coalesce(var.location, local.resource_group_location)
   name                              = var.name
