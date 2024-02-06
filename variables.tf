@@ -1,3 +1,168 @@
+variable "administrator_login" {
+  type        = string
+  default     = null
+  description = "(Optional) The Administrator login for the MySQL Flexible Server. Required when `create_mode` is `Default`. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "administrator_password" {
+  type        = string
+  default     = null
+  description = "(Optional) The Password associated with the `administrator_login` for the MySQL Flexible Server. Required when `create_mode` is `Default`."
+  sensitive   = true
+}
+
+variable "backup_retention_days" {
+  type        = number
+  default     = null
+  description = "(Optional) The backup retention days for the MySQL Flexible Server. Possible values are between `1` and `35` days. Defaults to `7`."
+}
+
+variable "create_mode" {
+  type        = string
+  default     = null
+  description = "(Optional)The creation mode which can be used to restore or replicate existing servers. Possible values are `Default`, `PointInTimeRestore`, `GeoRestore`, and `Replica`. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "customer_managed_key" {
+  type = object({
+    geo_backup_key_vault_key_id          = optional(string)
+    geo_backup_user_assigned_identity_id = optional(string)
+    key_vault_key_id                     = optional(string)
+    primary_user_assigned_identity_id    = optional(string)
+  })
+  default     = null
+  description = <<-EOT
+ - `geo_backup_key_vault_key_id` - (Optional) The ID of the geo backup Key Vault Key. It can't cross region and need Customer Managed Key in same region as geo backup.
+ - `geo_backup_user_assigned_identity_id` - (Optional) The geo backup user managed identity id for a Customer Managed Key. Should be added with `identity_ids`. It can't cross region and need identity in same region as geo backup.
+ - `key_vault_key_id` - (Optional) The ID of the Key Vault Key.
+ - `primary_user_assigned_identity_id` - (Optional) Specifies the primary user managed identity id for a Customer Managed Key. Should be added with `identity_ids`.
+EOT
+}
+
+variable "identity" {
+  type = object({
+    identity_ids = set(string)
+    type         = string
+  })
+  default     = null
+  description = <<-EOT
+ - `identity_ids` - (Required) A list of User Assigned Managed Identity IDs to be assigned to this MySQL Flexible Server.
+ - `type` - (Required) Specifies the type of Managed Service Identity that should be configured on this MySQL Flexible Server. The only possible value is `UserAssigned`.
+EOT
+}
+
+variable "delegated_subnet_id" {
+  type        = string
+  default     = null
+  description = "(Optional) The ID of the virtual network subnet to create the MySQL Flexible Server. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "geo_redundant_backup_enabled" {
+  type        = bool
+  default     = null
+  description = "(Optional) Should geo redundant backup enabled? Defaults to `false`. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "high_availability" {
+  type = object({
+    mode                      = string
+    standby_availability_zone = optional(string)
+  })
+  default     = null
+  description = <<-EOT
+ - `mode` - (Required) The high availability mode for the MySQL Flexible Server. Possibles values are `SameZone` and `ZoneRedundant`.
+ - `standby_availability_zone` - (Optional) Specifies the Availability Zone in which the standby Flexible Server should be located. Possible values are `1`, `2` and `3`.
+EOT
+}
+
+variable "maintenance_window" {
+  type = object({
+    day_of_week  = optional(number)
+    start_hour   = optional(number)
+    start_minute = optional(number)
+  })
+  default     = null
+  description = <<-EOT
+ - `day_of_week` - (Optional) The day of week for maintenance window. Defaults to `0`.
+ - `start_hour` - (Optional) The start hour for maintenance window. Defaults to `0`.
+ - `start_minute` - (Optional) The start minute for maintenance window. Defaults to `0`.
+EOT
+}
+
+variable "point_in_time_restore_time_in_utc" {
+  type        = string
+  default     = null
+  description = "(Optional) The point in time to restore from `creation_source_server_id` when `create_mode` is `PointInTimeRestore`. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "private_dns_zone_id" {
+  type        = string
+  default     = null
+  description = "(Optional) The ID of the private DNS zone to create the MySQL Flexible Server. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "replication_role" {
+  type        = string
+  default     = null
+  description = "(Optional) The replication role. Possible value is `None`."
+}
+
+variable "sku_name" {
+  type        = string
+  default     = null
+  description = "(Optional) The SKU Name for the MySQL Flexible Server."
+}
+
+variable "source_server_id" {
+  type        = string
+  default     = null
+  description = "(Optional)The resource ID of the source MySQL Flexible Server to be restored. Required when `create_mode` is `PointInTimeRestore`, `GeoRestore`, and `Replica`. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "storage" {
+  type = object({
+    auto_grow_enabled  = optional(bool)
+    io_scaling_enabled = optional(bool)
+    iops               = optional(number)
+    size_gb            = optional(number)
+  })
+  default     = null
+  description = <<-EOT
+ - `auto_grow_enabled` - (Optional) Should Storage Auto Grow be enabled? Defaults to `true`.
+ - `io_scaling_enabled` - (Optional) Should IOPS be scaled automatically? If `true`, `iops` can not be set. Defaults to `false`.
+ - `iops` - (Optional) The storage IOPS for the MySQL Flexible Server. Possible values are between `360` and `20000`.
+ - `size_gb` - (Optional) The max storage allowed for the MySQL Flexible Server. Possible values are between `20` and `16384`.
+EOT
+}
+
+variable "timeouts" {
+  type = object({
+    create = optional(string)
+    delete = optional(string)
+    read   = optional(string)
+    update = optional(string)
+  })
+  default     = null
+  description = <<-EOT
+ - `create` - (Defaults to 1 hour) Used when creating the MySQL Flexible Server.
+ - `delete` - (Defaults to 1 hour) Used when deleting the MySQL Flexible Server.
+ - `read` - (Defaults to 5 minutes) Used when retrieving the MySQL Flexible Server.
+ - `update` - (Defaults to 1 hour) Used when updating the MySQL Flexible Server.
+EOT
+}
+
+variable "version" {
+  type        = string
+  default     = null
+  description = "(Optional) The version of the MySQL Flexible Server to use. Possible values are `5.7`, and `8.0.21`. Changing this forces a new MySQL Flexible Server to be created."
+}
+
+variable "zone" {
+  type        = string
+  default     = null
+  description = "(Optional) Specifies the Availability Zone in which this MySQL Flexible Server should be located. Possible values are `1`, `2` and `3`."
+}
+
 variable "enable_telemetry" {
   type        = bool
   default     = true
@@ -195,7 +360,7 @@ DESCRIPTION
 # tflint-ignore: terraform_unused_declarations
 variable "tags" {
   type        = map(any)
-  description = "The map of tags to be applied to the resource"
+  description = "(Optional) A mapping of tags which should be assigned to the MySQL Flexible Server."
   default     = {}
 }
 

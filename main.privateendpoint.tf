@@ -1,4 +1,5 @@
-# TODO remove this code & var.private_endpoints if private link is not support.  Note it must be included in this module if it is supported.
+# TODO: this isn't needed because its  not mentioned in hashicorp documentation?
+# remove this code & var.private_endpoints if private link is not support.  Note it must be included in this module if it is supported.
 resource "azurerm_private_endpoint" "this" {
   for_each                      = var.private_endpoints
   name                          = each.value.name != null ? each.value.name : "pe-${var.name}"
