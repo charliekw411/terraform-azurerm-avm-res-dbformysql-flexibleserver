@@ -20,7 +20,7 @@ resource "azurerm_mysql_flexible_server" "this" {
   sku_name                          = var.sku_name
   source_server_id                  = var.source_server_id
   tags                              = var.tags
-  version                           = var.version
+  version                           = var.mysql_version
   zone                              = var.zone
 
   dynamic "customer_managed_key" {

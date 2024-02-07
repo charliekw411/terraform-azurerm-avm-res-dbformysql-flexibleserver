@@ -7,16 +7,10 @@ output "resource" {
 
 output "id" {
   description = "The ID of the resoure"
-  value = azurerm_mysql_flexible_server.this
+  value       = azurerm_mysql_flexible_server.this
 }
 
 output "name" {
   description = "The name of the rresource"
-  value = azurerm_mysql_flexible_server.this.id
-}
-
-# TODO: remove?
-output "private_endpoints" {
-  value       = azurerm_private_endpoint.this
-  description = "A map of private endpoints. The map key is the supplied input to var.private_endpoints. The map value is the entire azurerm_private_endpoint resource."
+  value       = azurerm_mysql_flexible_server.this.id
 }
