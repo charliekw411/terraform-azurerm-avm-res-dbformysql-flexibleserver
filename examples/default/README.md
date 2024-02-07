@@ -43,10 +43,17 @@ module "naming" {
   version = ">= 0.3.0"
 }
 
+
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
   location = module.regions.regions[random_integer.region_index.result].name
+}
+
+resource "random_password" "admin_password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 # This is the module call
@@ -57,9 +64,12 @@ module "dbformysql" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry    = var.enable_telemetry                 # see variables.tf
-  name                = module.naming.sql_server.name_unique # TODO: is this right?                
-  resource_group_name = azurerm_resource_group.this.name
+  enable_telemetry       = var.enable_telemetry # see variables.tf
+  name                   = module.naming.mysql_server.name_unique
+  resource_group_name    = azurerm_resource_group.this.name
+  administrator_login    = "mysqladmin"
+  administrator_password = random_password.admin_password.result
+  sku_name               = "B_Standard_B1s"
 }
 ```
 
@@ -88,6 +98,7 @@ The following resources are used by this module:
 
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [random_password.admin_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) (resource)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
