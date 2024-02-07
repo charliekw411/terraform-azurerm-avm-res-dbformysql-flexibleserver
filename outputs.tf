@@ -7,10 +7,10 @@ output "resource" {
 
 output "id" {
   description = "The ID of the resoure"
-  value = azurerm_mysql_flexible_server.this
+  value       = azurerm_mysql_flexible_server.this
 }
 
 output "name" {
   description = "The name of the rresource"
-  value = azurerm_mysql_flexible_server.this.id
+  value       = azurerm_mysql_flexible_server.this.id
 }

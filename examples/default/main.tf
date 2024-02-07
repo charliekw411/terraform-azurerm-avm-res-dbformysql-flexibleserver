@@ -51,7 +51,7 @@ module "dbformysql" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry    = var.enable_telemetry # see variables.tf
+  enable_telemetry    = var.enable_telemetry                 # see variables.tf
   name                = module.naming.sql_server.name_unique # TODO: is this right?                
   resource_group_name = azurerm_resource_group.this.name
 }
