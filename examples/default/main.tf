@@ -37,6 +37,7 @@ module "naming" {
   version = ">= 0.3.0"
 }
 
+
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
