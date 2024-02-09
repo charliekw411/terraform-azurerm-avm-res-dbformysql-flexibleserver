@@ -54,7 +54,7 @@ module "dbformysql" {
     my_database = {
       charset   = "utf8"
       collation = "utf8_unicode_ci"
-      name      = module.naming.mysql_server.name_unique
+      name      = module.naming.mysql_database.name_unique
     }
   }
 }
