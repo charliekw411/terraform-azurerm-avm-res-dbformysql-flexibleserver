@@ -17,18 +17,6 @@ provider "azurerm" {
   skip_provider_registration = true
 }
 
-# This allows us to randomize the region for the resource group.
-module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = ">= 0.3.0"
-}
-
-# This allows us to randomize the region for the resource group.
-resource "random_integer" "region_index" {
-  min = 0
-  max = length(module.regions.regions) - 1
-}
-
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
@@ -38,7 +26,7 @@ module "naming" {
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
-  location = module.regions.regions[random_integer.region_index.result].name
+  location = "AustraliaEast"
 }
 
 # A vnet & subnet is required for the private endpoint.
@@ -57,7 +45,7 @@ resource "azurerm_subnet" "this" {
 }
 
 resource "azurerm_private_dns_zone" "this" {
-  name                = "privatelink.vaultcore.azure.net"
+  name                = "privatelink.mysql.database.azure.com"
   resource_group_name = azurerm_resource_group.this.name
 }
 

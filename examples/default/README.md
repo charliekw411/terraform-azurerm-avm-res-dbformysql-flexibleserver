@@ -23,21 +23,6 @@ provider "azurerm" {
   skip_provider_registration = true
 }
 
-
-## Section to provide a random Azure region for the resource group
-# This allows us to randomize the region for the resource group.
-module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = ">= 0.3.0"
-}
-
-# This allows us to randomize the region for the resource group.
-resource "random_integer" "region_index" {
-  min = 0
-  max = length(module.regions.regions) - 1
-}
-## End of section to provide a random Azure region for the resource group
-
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
@@ -48,7 +33,7 @@ module "naming" {
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
-  location = module.regions.regions[random_integer.region_index.result].name
+  location = "AustraliaEast"
 }
 
 resource "random_password" "admin_password" {
@@ -98,7 +83,6 @@ The following providers are used by this module:
 The following resources are used by this module:
 
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 - [random_password.admin_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) (resource)
 
 <!-- markdownlint-disable MD013 -->
@@ -139,12 +123,6 @@ Version:
 Source: Azure/naming/azurerm
 
 Version: >= 0.4.0
-
-### <a name="module_regions"></a> [regions](#module\_regions)
-
-Source: Azure/regions/azurerm
-
-Version: >= 0.3.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
