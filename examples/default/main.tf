@@ -63,4 +63,5 @@ module "dbformysql" {
   resource_group_name    = azurerm_resource_group.this.name
   administrator_login    = "mysqladmin"
   administrator_password = random_password.admin_password.result
+  sku_name               = ""
 }
