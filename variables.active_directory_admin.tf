@@ -4,7 +4,7 @@ variable "active_directory_administrator" {
     login       = optional(string)
     object_id   = optional(string)
     tenant_id   = optional(string)
-    timeouts    = optional(object({
+    timeouts = optional(object({
       create = optional(string)
       read   = optional(string)
       update = optional(string)
@@ -25,6 +25,6 @@ variable "active_directory_administrator" {
  - `delete` - (Defaults to 30 minutes) Used when deleting the MySQL Flexible Server Active Directory Administrator.
 EOT
   default     = {}
-  nullable = true
+  nullable    = true
 }
 

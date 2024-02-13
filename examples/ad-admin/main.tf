@@ -52,7 +52,7 @@ resource "random_password" "admin_password" {
 }
 
 resource "azurerm_user_assigned_identity" "this" {
-  name                = module.naming.user_assigned_identity.name_unique 
+  name                = module.naming.user_assigned_identity.name_unique
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
 }
@@ -74,8 +74,8 @@ module "dbformysql" {
 
   active_directory_administrator = {
     identity_id = azurerm_user_assigned_identity.this.id
-    login = "mysqladmin" 
-    object_id = "6c8d236c-3463-479b-9e80-25e3dbda8ca0" # the Entra ID Group to be set up as the admin
-    tenant_id = data.azurerm_client_config.this.tenant_id
+    login       = "mysqladmin"
+    object_id   = "6c8d236c-3463-479b-9e80-25e3dbda8ca0" # the Entra ID Group to be set up as the admin
+    tenant_id   = data.azurerm_client_config.this.tenant_id
   }
 }
