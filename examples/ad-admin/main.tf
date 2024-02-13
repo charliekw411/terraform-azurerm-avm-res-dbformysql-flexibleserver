@@ -16,6 +16,8 @@ provider "azurerm" {
   features {}
 }
 
+# we need the tenant id for the active directory administrator 
+data "azurerm_client_config" "this" {}
 
 ## Section to provide a random Azure region for the resource group
 # This allows us to randomize the region for the resource group.
@@ -37,7 +39,6 @@ module "naming" {
   version = ">= 0.3.0"
 }
 
-
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
@@ -48,6 +49,12 @@ resource "random_password" "admin_password" {
   length           = 16
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "azurerm_user_assigned_identity" "this" {
+  name                = module.naming.user_assigned_identity.name_unique 
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
 }
 
 # This is the module call
@@ -64,4 +71,11 @@ module "dbformysql" {
   administrator_login    = "mysqladmin"
   administrator_password = random_password.admin_password.result
   sku_name               = "GP_Standard_D2ds_v4"
+
+  active_directory_administrator = {
+    identity_id = azurerm_user_assigned_identity.this.id
+    login = "mysqladmin" 
+    object_id = "6c8d236c-3463-479b-9e80-25e3dbda8ca0" # the Entra ID Group to be set up as the admin
+    tenant_id = data.azurerm_client_config.this.tenant_id
+  }
 }
