@@ -39,13 +39,15 @@ resource "azurerm_mysql_flexible_server" "this" {
       standby_availability_zone = high_availability.value.standby_availability_zone
     }
   }
+
   dynamic "identity" {
-    for_each = var.identity == null ? [] : [var.identity]
+    for_each = length(var.managed_identities.user_assigned_resource_ids) > 0 ? { this = var.managed_identities } : {}
     content {
-      identity_ids = identity.value.identity_ids
-      type         = identity.value.type
+      type         = "UserAssigned"
+      identity_ids = identity.value.user_assigned_resource_ids
     }
   }
+
   dynamic "maintenance_window" {
     for_each = var.maintenance_window == null ? [] : [var.maintenance_window]
     content {

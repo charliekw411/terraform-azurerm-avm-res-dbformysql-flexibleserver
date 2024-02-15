@@ -45,6 +45,7 @@ The following resources are used by this module:
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_mysql_flexible_database.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_flexible_database) (resource)
 - [azurerm_mysql_flexible_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_flexible_server) (resource)
+- [azurerm_mysql_flexible_server_active_directory_administrator.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mysql_flexible_server_active_directory_administrator) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
 - [azurerm_private_endpoint_application_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint_application_security_group_association) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
@@ -72,6 +73,38 @@ Type: `string`
 ## Optional Inputs
 
 The following input variables are optional (have default values):
+
+### <a name="input_active_directory_administrator"></a> [active\_directory\_administrator](#input\_active\_directory\_administrator)
+
+Description: - `identity_id` - (Required) The resource ID of the identity used for AAD Authentication.
+- `login` - (Required) The login name of the principal to set as the server administrator.
+- `object_id` - (Required) The ID of the principal to set as the server administrator. For a managed identity, this should be the Client ID of the identity.
+- `tenant_id` - (Required) The Azure Tenant ID.
+
+---
+`timeouts` block supports the following:
+- `create` - (Defaults to 30 minutes) Used when creating the MySQL Flexible Server Active Directory Administrator.
+- `read` - (Defaults to 5 minutes) Used when retrieving the MySQL Flexible Server Active Directory Administrator.
+- `update` - (Defaults to 30 minutes) Used when updating the MySQL Flexible Server Active Directory Administrator.
+- `delete` - (Defaults to 30 minutes) Used when deleting the MySQL Flexible Server Active Directory Administrator.
+
+Type:
+
+```hcl
+object({
+    login     = optional(string)
+    object_id = optional(string)
+    tenant_id = optional(string)
+    timeouts = optional(object({
+      create = optional(string)
+      read   = optional(string)
+      update = optional(string)
+      delete = optional(string)
+    }))
+  })
+```
+
+Default: `{}`
 
 ### <a name="input_administrator_login"></a> [administrator\_login](#input\_administrator\_login)
 
