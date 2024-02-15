@@ -24,6 +24,5 @@ variable "active_directory_administrator" {
  - `delete` - (Defaults to 30 minutes) Used when deleting the MySQL Flexible Server Active Directory Administrator.
 EOT
   default     = {}
-  nullable    = true
 }
 
