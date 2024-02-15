@@ -40,13 +40,13 @@ resource "azurerm_mysql_flexible_server" "this" {
     }
   }
 
-   dynamic "identity" {
-      for_each = length(var.managed_identities.user_assigned_resource_ids) > 0 ? { this = var.managed_identities } : {}
-      content {
-        type         = "UserAssigned"
-        identity_ids = identity.value.user_assigned_resource_ids
-      }
+  dynamic "identity" {
+    for_each = length(var.managed_identities.user_assigned_resource_ids) > 0 ? { this = var.managed_identities } : {}
+    content {
+      type         = "UserAssigned"
+      identity_ids = identity.value.user_assigned_resource_ids
     }
+  }
 
   dynamic "maintenance_window" {
     for_each = var.maintenance_window == null ? [] : [var.maintenance_window]
