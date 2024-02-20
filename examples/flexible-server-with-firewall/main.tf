@@ -5,10 +5,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 3.91.0, < 4.0.0"
     }
-    random = {
-      source  = "hashicorp/random"
-      version = ">= 3.6.0, < 4.0.0"
-    }
   }
 }
 
@@ -40,5 +36,18 @@ module "mysql_server_with_firewall" {
   enable_telemetry    = var.enable_telemetry # see variables.tf
   name                = module.naming.mysql_server.name_unique
   resource_group_name = azurerm_resource_group.this.name
-  #TODO: How should this module call be setup/configured?
+  firewall_rules = {
+    single_ip = {
+      start_ip_address = "40.112.8.12"
+      end_ip_address   = "40.112.8.12"
+    }
+    ip_range = {
+      start_ip_address = "40.112.0.0"
+      end_ip_address   = "40.112.255.255"
+    }
+    access_azure = {
+      start_ip_address = "0.0.0.0"
+      end_ip_address   = "0.0.0.0"
+    }
+  }
 }
