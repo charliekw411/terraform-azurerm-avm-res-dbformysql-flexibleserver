@@ -54,6 +54,7 @@ module "mysql_server_with_firewall" {
   resource_group_name    = azurerm_resource_group.this.name
   administrator_login    = "mysqladmin"
   administrator_password = random_password.admin_password.result
+  sku_name               = "GP_Standard_D2ds_v4"
   firewall_rules = {
     single_ip = {
       start_ip_address = "40.112.8.12"
