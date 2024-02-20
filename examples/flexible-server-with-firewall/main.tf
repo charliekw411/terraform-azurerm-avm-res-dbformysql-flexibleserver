@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 3.91.0, < 4.0.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.6.0, < 4.0.0"
+    }
   }
 }
 
@@ -25,6 +29,12 @@ resource "azurerm_resource_group" "this" {
   location = "AustraliaEast"
 }
 
+resource "random_password" "admin_password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 # This is the module call
 # Do not specify location here due to the randomization above.
 # Leaving location as `null` will cause the module to use the resource group location
@@ -33,9 +43,11 @@ module "mysql_server_with_firewall" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry    = var.enable_telemetry # see variables.tf
-  name                = module.naming.mysql_server.name_unique
-  resource_group_name = azurerm_resource_group.this.name
+  enable_telemetry       = var.enable_telemetry # see variables.tf
+  name                   = module.naming.mysql_server.name_unique
+  resource_group_name    = azurerm_resource_group.this.name
+  administrator_login    = "mysqladmin"
+  administrator_password = random_password.admin_password.result
   firewall_rules = {
     single_ip = {
       start_ip_address = "40.112.8.12"

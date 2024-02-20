@@ -11,6 +11,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 3.91.0, < 4.0.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.6.0, < 4.0.0"
+    }
   }
 }
 
@@ -31,6 +35,12 @@ resource "azurerm_resource_group" "this" {
   location = "AustraliaEast"
 }
 
+resource "random_password" "admin_password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 # This is the module call
 # Do not specify location here due to the randomization above.
 # Leaving location as `null` will cause the module to use the resource group location
@@ -39,9 +49,11 @@ module "mysql_server_with_firewall" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry    = var.enable_telemetry # see variables.tf
-  name                = module.naming.mysql_server.name_unique
-  resource_group_name = azurerm_resource_group.this.name
+  enable_telemetry       = var.enable_telemetry # see variables.tf
+  name                   = module.naming.mysql_server.name_unique
+  resource_group_name    = azurerm_resource_group.this.name
+  administrator_login    = "mysqladmin"
+  administrator_password = random_password.admin_password.result
   firewall_rules = {
     single_ip = {
       start_ip_address = "40.112.8.12"
@@ -68,17 +80,22 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.91.0, < 4.0.0)
 
+- <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.6.0, < 4.0.0)
+
 ## Providers
 
 The following providers are used by this module:
 
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.91.0, < 4.0.0)
 
+- <a name="provider_random"></a> [random](#provider\_random) (>= 3.6.0, < 4.0.0)
+
 ## Resources
 
 The following resources are used by this module:
 
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
+- [random_password.admin_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) (resource)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
