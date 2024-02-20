@@ -29,33 +29,24 @@ module "naming" {
   version = ">= 0.4.0"
 }
 
-
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
   location = "AustraliaEast"
 }
 
-resource "random_password" "admin_password" {
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-}
-
 # This is the module call
 # Do not specify location here due to the randomization above.
 # Leaving location as `null` will cause the module to use the resource group location
 # with a data source.
-module "mysql_server" {
+module "mysql_server_with_firewall" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry       = var.enable_telemetry # see variables.tf
-  name                   = module.naming.mysql_server.name_unique
-  resource_group_name    = azurerm_resource_group.this.name
-  administrator_login    = "mysqladmin"
-  administrator_password = random_password.admin_password.result
-  sku_name               = "GP_Standard_D2ds_v4"
+  enable_telemetry    = var.enable_telemetry # see variables.tf
+  name                = module.naming.mysql_server.name_unique
+  resource_group_name = azurerm_resource_group.this.name
+  #TODO: How should this module call be setup/configured?
 }
 ```
 
@@ -76,14 +67,11 @@ The following providers are used by this module:
 
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.91.0, < 4.0.0)
 
-- <a name="provider_random"></a> [random](#provider\_random) (>= 3.6.0, < 4.0.0)
-
 ## Resources
 
 The following resources are used by this module:
 
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [random_password.admin_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) (resource)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -112,7 +100,7 @@ No outputs.
 
 The following Modules are called:
 
-### <a name="module_mysql_server"></a> [mysql\_server](#module\_mysql\_server)
+### <a name="module_mysql_server_with_firewall"></a> [mysql\_server\_with\_firewall](#module\_mysql\_server\_with\_firewall)
 
 Source: ../../
 
